@@ -6,24 +6,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
-// Database info
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "Rady_2003"
-	dbname   = "Bankist"
-)
 
 func main() {
-	connection := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+	connection := fmt.Sprintf("host=%s port=%s user=%s "+
+		"password=%s dbname=%s sslmode=require",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"))
 	db.InitDB(connection)
 
 	r := mux.NewRouter()
@@ -40,6 +37,11 @@ func main() {
 	originsOk := handlers.AllowedOrigins([]string{"*"}) // Allow all origins (for dev)
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 
-	log.Println("Server is running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe("0.0.0.0:8080", handlers.CORS(originsOk, headersOk, methodsOk)(r)))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // default
+	}
+
+	log.Println("Server is running on port:", port)
+	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(r)))
 }

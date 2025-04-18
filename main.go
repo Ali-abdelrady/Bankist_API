@@ -21,7 +21,7 @@ import (
 // )
 
 func main() {
-	connection := os.Getenv("DATABASE_URL")
+	connection := os.Getenv("DATABASE_PUBLIC_URL")
     if connection == "" {
         log.Fatal("DATABASE_URL is not set")
     }

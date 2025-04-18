@@ -5,7 +5,6 @@ import (
 	"bankist/handler"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -21,7 +20,7 @@ import (
 // )
 
 func main() {
-	connection := os.Getenv("DATABASE_URL")
+	connection := "postgresql://postgres:XUTGJtbFbuAHKTLHNTXvshYFdFXwPiuT@postgres.railway.internal:5432/railway"
     if connection == "" {
         log.Fatal("DATABASE_URL is not set")
     }
